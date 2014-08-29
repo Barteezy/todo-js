@@ -75,3 +75,16 @@ li:nth-child(even) {
     width: 30%;
     background-color: lightgreen;
 }
+
+.remove {
+    display: inline-block;
+    float: right;
+    color: red;
+}
+
+#delete-message {
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    background-color: red;
+}

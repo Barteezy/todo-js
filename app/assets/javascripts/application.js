@@ -11,16 +11,18 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
+//= require turbolinks
 //= require_tree .
 
 $(document).ready(function () {
     var formhtml = "";
     formhtml += "<h1>Todoly</h1>";
     formhtml += "<form>";
-    formhtml += "<input type='text' name='todo' id='todo'/>"
-    formhtml += "<br><input type='submit' value='Create Todo' id='button'/>"
-    formhtml += "</form>"
+    formhtml += "<input type='text' name='todo' id='todo'/>";
+    formhtml += "<br><input type='submit' value='Create Todo' id='button'/>";
+    formhtml += "</form>";
 
     var todoshtml = "";
     todoshtml += "<h2 id='flash-insert'>Todo</h2>";
@@ -32,14 +34,15 @@ $(document).ready(function () {
 
     var successMessage = "<div id='flash-message'>Todo created</div>";
 
+    var deleteMessage = "<div id='delete-message'>Todo deleted</div>";
+
     var $todos = $('#todos');
     var $name = $('#todo');
 
-    var todoTemplate = "" +
-        "<li>" +
-        "<p>{{name}}</p>" +
-        "<button data-id='{{id}}' class='remove'>X</button>"
-        "</li>"
+    var todoTemplate = ""
+        todoTemplate += "<li>";
+        todoTemplate += "<a>{{name}}</a><div data-id='{{id}}' class='remove'>X</div>";
+        todoTemplate += "</li>";
 
 
     $.ajax({
@@ -81,7 +84,10 @@ $(document).ready(function () {
                 $li.remove();
             }
         });
+        $('#flash-insert').append(deleteMessage);
 
+        window.setTimeout(function () {
+            $('#delete-message').remove() },1000);
     });
 
 });
