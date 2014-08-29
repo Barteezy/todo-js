@@ -14,6 +14,74 @@
 //= require jquery_ujs
 //= require_tree .
 
-$(document).ready(function() {
-  $('body').append("<h1>hello world, I'm from only javascript!</h1>");
+$(document).ready(function () {
+    var formhtml = "";
+    formhtml += "<h1>Todoly</h1>";
+    formhtml += "<form>";
+    formhtml += "<input type='text' name='todo' id='todo'/>"
+    formhtml += "<br><input type='submit' value='Create Todo' id='button'/>"
+    formhtml += "</form>"
+
+    var todoshtml = "";
+    todoshtml += "<h2 id='flash-insert'>Todo</h2>";
+    todoshtml += "<div id='todos'></div>";
+
+    var $new_task_div = $('body');
+
+    $new_task_div.append(formhtml + todoshtml);
+
+    var successMessage = "<div id='flash-message'>Todo created</div>";
+
+    var $todos = $('#todos');
+    var $name = $('#todo');
+
+    var todoTemplate = "" +
+        "<li>" +
+        "<p>{{name}}</p>" +
+        "<button data-id='{{id}}' class='remove'>X</button>"
+        "</li>"
+
+
+    $.ajax({
+        type: 'GET',
+        url: '/todos',
+        success: function (todos) {
+            $.each(todos, function (i, todo) {
+                $todos.append(Mustache.render(todoTemplate, todo));
+            });
+        }
+    });
+
+    $('#button').on('click', function (e) {
+        e.preventDefault();
+        var todo = {
+            name: $name.val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/todos',
+            data: todo,
+            success: function (newTodo) {
+                $todos.append('<li>' + newTodo.name + '</li>');
+            }
+        });
+        $('#flash-insert').append(successMessage);
+
+        window.setTimeout(function () {
+         $('#flash-message').remove() },1000);
+    });
+
+    $todos.delegate('.remove','click', function() {
+        var $li = $(this).closest('li');
+        $.ajax({
+            type: 'DELETE',
+            url: 'todos/' + $(this).attr('data-id'),
+            success:function () {
+                $li.remove();
+            }
+        });
+
+    });
+
 });
