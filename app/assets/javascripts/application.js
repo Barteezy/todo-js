@@ -55,7 +55,14 @@ $(document).ready(function () {
         url: '/todos',
         success: function (todos) {
             $.each(todos, function (i, todo) {
-                $todos.append(Mustache.render(todoTemplate, todo));
+                if (todo.complete) {
+                    $('#completed').append(Mustache.render(todoTemplate, todo));
+
+                };
+                if (!(todo.complete)) {
+                    $todos.append(Mustache.render(todoTemplate, todo));
+
+                };
             });
         }
     });
