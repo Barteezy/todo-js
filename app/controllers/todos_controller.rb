@@ -15,7 +15,12 @@ class TodosController < ApplicationController
 
   def update
     @todo = Todo.find(params[:id])
-    @todo.complete = true
+    if @todo.complete?
+        @todo.complete = false
+    else
+      @todo.complete == false
+      @todo.complete = true
+    end
     if @todo.save
       render json: @todo.to_json
     else

@@ -18,6 +18,9 @@ body {
     text-align: center;
 
 }
+#completez {
+    align-self: center;
+}
 
 #flash {
     margin-left: auto;
@@ -47,6 +50,10 @@ body {
     text-align: left;
 }
 
+#completez {
+    width: 30%;
+    margin: 0 auto;
+}
 
 
 
@@ -59,6 +66,12 @@ li:nth-child(even) {
     display: inline-block;
     color: red;
 
+}
+
+.flashx {
+    float: right;
+    display: inline-block;
+    color: red;
 }
 
 #todos {
@@ -96,6 +109,7 @@ li:nth-child(even) {
 }
 
 #completed {
+    display: none;
     border: 1px;
     margin-left: auto;
     margin-right: auto;
@@ -109,4 +123,5 @@ li:nth-child(even) {
     width: 30%;
     background-color: lightgreen;
 }
+
 

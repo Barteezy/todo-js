@@ -27,15 +27,15 @@ $(document).ready(function () {
     var todoshtml = "";
     todoshtml += "<h2 id='flash-insert'>Todo</h2>";
     todoshtml += "<div id='todos'></div>";
-    todoshtml += "<h2>Completed</h2>";
-    todoshtml += "<div id='completed'></div>"
+    todoshtml += "<div id='completed'><h2 id='completez'>Completed</h2></div>"
+
 
 
     var $new_task_div = $('body');
 
     $new_task_div.append(formhtml + todoshtml);
 
-    var successMessage = "<div id='flash-message'>Todo created</div>";
+    var successMessage = "<div id='flash-message'>Todo created<div class='flashx'>X</div></div>";
 
     var deleteMessage = "<div id='delete-message'>Todo deleted</div>";
 
@@ -55,17 +55,22 @@ $(document).ready(function () {
         url: '/todos',
         success: function (todos) {
             $.each(todos, function (i, todo) {
+                if ($(todo.complete).length != 0) {
+                    $('#completed').css('display', 'block');
+                }
                 if (todo.complete) {
                     $('#completed').append(Mustache.render(todoTemplate, todo));
+                }
 
-                };
                 if (!(todo.complete)) {
                     $todos.append(Mustache.render(todoTemplate, todo));
+                }
 
-                };
             });
         }
     });
+
+
 
     $('#button').on('click', function (e) {
         e.preventDefault();
@@ -83,8 +88,14 @@ $(document).ready(function () {
         });
         $('#flash-insert').append(successMessage);
 
+        $(".flashx").on('click', function() {
+            $('#flash-message').hide();
+        });
+
         window.setTimeout(function () {
          $('#flash-message').remove() },1000);
+
+
     });
 
     $new_task_div.delegate('.remove','click', function() {
@@ -94,13 +105,20 @@ $(document).ready(function () {
             url: 'todos/' + $(this).attr('data-id'),
             success:function () {
                 $li.remove();
+                if ($('#completed li').length == 0) {
+                    $('#completed').hide();
+                }
             }
         });
+
         $('#flash-insert').append(deleteMessage);
 
         window.setTimeout(function () {
             $('#delete-message').remove() },1000);
+
+
     });
+
 
     $todos.delegate('.check', 'click', function() {
         var $li = $(this).closest('li');
@@ -108,13 +126,35 @@ $(document).ready(function () {
             type: 'PUT',
             url: '/todos/' + $(this).attr('data-id'),
             success:function () {
+                $('#completed').css('display', 'block');
                 $('#completed').append($li);
+                if ($('#completed li').length == 0) {
+                    $('#completed').hide();
+                }
             }
         });
         $('#flash-insert').append(completeMessage);
 
         window.setTimeout(function () {
             $('#complete-message').remove() },1000);
+            $("#completed").show();
+
     });
+
+    $('#completed').delegate('.check', 'click', function() {
+        var $li = $(this).closest('li');
+        $.ajax({
+            type: 'PUT',
+            url: '/todos/' + $(this).attr('data-id'),
+            success:function () {
+                $todos.append($li);
+                if ($('#completed li').length == 0) {
+                    $('#completed').hide();
+                }
+            }
+        });
+
+    });
+
 
 });
