@@ -27,6 +27,9 @@ $(document).ready(function () {
     var todoshtml = "";
     todoshtml += "<h2 id='flash-insert'>Todo</h2>";
     todoshtml += "<div id='todos'></div>";
+    todoshtml += "<h2>Completed</h2>";
+    todoshtml += "<div id='completed'></div>"
+
 
     var $new_task_div = $('body');
 
@@ -36,12 +39,14 @@ $(document).ready(function () {
 
     var deleteMessage = "<div id='delete-message'>Todo deleted</div>";
 
+    var completeMessage = "<div id='complete-message'>Todo completed</div>";
+
     var $todos = $('#todos');
     var $name = $('#todo');
 
     var todoTemplate = ""
         todoTemplate += "<li>";
-        todoTemplate += "<a>{{name}}</a><div data-id='{{id}}' class='remove'>X</div>";
+        todoTemplate += "<a>{{name}}</a><div data-id='{{id}}' class='remove'>X</div><div data-id='{{id}}' class='check'>√</div>";
         todoTemplate += "</li>";
 
 
@@ -66,7 +71,7 @@ $(document).ready(function () {
             url: '/todos',
             data: todo,
             success: function (newTodo) {
-                $todos.append('<li>' + newTodo.name + '</li>');
+                $todos.append(Mustache.render(todoTemplate, newTodo));
             }
         });
         $('#flash-insert').append(successMessage);
@@ -75,7 +80,7 @@ $(document).ready(function () {
          $('#flash-message').remove() },1000);
     });
 
-    $todos.delegate('.remove','click', function() {
+    $new_task_div.delegate('.remove','click', function() {
         var $li = $(this).closest('li');
         $.ajax({
             type: 'DELETE',
@@ -88,6 +93,21 @@ $(document).ready(function () {
 
         window.setTimeout(function () {
             $('#delete-message').remove() },1000);
+    });
+
+    $todos.delegate('.check', 'click', function() {
+        var $li = $(this).closest('li');
+        $.ajax({
+            type: 'PUT',
+            url: '/todos/' + $(this).attr('data-id'),
+            success:function () {
+                $('#completed').append($li);
+            }
+        });
+        $('#flash-insert').append(completeMessage);
+
+        window.setTimeout(function () {
+            $('#complete-message').remove() },1000);
     });
 
 });

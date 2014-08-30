@@ -88,3 +88,25 @@ li:nth-child(even) {
     width: 30%;
     background-color: red;
 }
+
+.check {
+    display: inline-block;
+    float: right;
+    color: green;
+}
+
+#completed {
+    border: 1px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    text-align: left;
+}
+
+#complete-message {
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    background-color: lightgreen;
+}
+
